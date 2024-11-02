@@ -1,0 +1,191 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# ## Demystifying Delta Parquet
+# 
+# New notebook
+
+# In[ ]:
+
+
+DROP TABLE IF EXISTS WideWorldImportersDW.DimCustomer;
+DROP TABLE IF EXISTS WideWorldImportersDW.dimcustomer_COPY
+
+
+# In[ ]:
+
+
+CREATE OR REPLACE TABLE WideWorldImportersDW.DimCustomer (
+  id INT,
+  firstName STRING,
+  middleName STRING,
+  lastName STRING,
+  gender STRING,
+  birthDate TIMESTAMP,
+  salary INT
+) USING DELTA
+
+
+# In[ ]:
+
+
+INSERT INTO WideWorldImportersDW.dimcustomer
+VALUES
+(1,"Jarid","Martin","McKenzie","Male","1999-11-02",100000),
+(2,"Mike","Matty","Martinez","M","1975-04-23",105000);
+
+
+# In[ ]:
+
+
+UPDATE wideworldImportersdw.dimcustomer
+    set salary = 150000
+where id = 1
+
+
+# In[ ]:
+
+
+DELETE from wideworldimportersdw.dimcustomer
+where id = 2
+
+
+# In[ ]:
+
+
+select * from parquet.`Tables/dimcustomer/part-00000-7c513278-3189-4038-831f-a36ed4d6caae-c000.snappy.parquet`
+
+
+# In[ ]:
+
+
+SELECT * from parquet.`Tables/dimcustomer/part-00000-77945cf5-f61f-48f2-b975-0a6a61d78ae6-c000.snappy.parquet`
+
+
+# In[ ]:
+
+
+SELECT * from parquet.`Tables/dimcustomer/part-00000-947d7533-9f1b-4326-a669-425652816150-c000.snappy.parquet`
+
+
+# In[ ]:
+
+
+INSERT INTO WideWorldImportersDW.dimcustomer
+VALUES
+(3,"William","Brad","Pitt","Male","1963-12-18",10000000);
+
+
+# In[ ]:
+
+
+SELECT * from parquet.`Tables/dimcustomer/part-00000-947d7533-9f1b-4326-a669-425652816150-c000.snappy.parquet`
+UNION
+SELECT * from parquet.`Tables/dimcustomer/part-00000-6ddd7750-f6b8-4e05-9fc4-c12445459c78-c000.snappy.parquet`
+
+
+# In[ ]:
+
+
+INSERT INTO WideWorldImportersDW.dimcustomer
+VALUES
+(4,"Jarid","Martin","McKenzie","Male","1999-11-08",100000),
+(5,"Mike","Matty","Martinez","M","1975-04-23",105000);
+
+INSERT INTO WideWorldImportersDW.dimcustomer
+VALUES
+(6,"Jarid","Martin","McKenzie","Male","1999-11-08",100000),
+(7,"Mike","Matty","Martinez","M","1975-04-23",105000);
+
+INSERT INTO WideWorldImportersDW.dimcustomer
+VALUES
+(8,"Jarid","Martin","McKenzie","Male","1999-11-08",100000),
+(9,"Mike","Matty","Martinez","M","1975-04-23",105000);
+
+INSERT INTO WideWorldImportersDW.dimcustomer
+VALUES
+(10,"Jarid","Martin","McKenzie","Male","1999-11-08",100000),
+(11,"Mike","Matty","Martinez","M","1975-04-23",105000);
+
+INSERT INTO WideWorldImportersDW.dimcustomer
+VALUES
+(12,"Jarid","Martin","McKenzie","Male","1999-11-08",100000),
+(13,"Mike","Matty","Martinez","M","1975-04-23",105000);
+
+INSERT INTO WideWorldImportersDW.dimcustomer
+VALUES
+(14,"Jarid","Martin","McKenzie","Male","1999-11-08",100000),
+(15,"Mike","Matty","Martinez","M","1975-04-23",105000);
+
+
+# In[ ]:
+
+
+SELECT * from parquet.`Tables/dimcustomer/part-00000-ffefb54f-0fe8-45ea-850e-595e90062024-c000.snappy.parquet`
+
+
+# In[ ]:
+
+
+OPTIMIZE WideWorldImportersDW.dimcustomer
+
+
+# In[ ]:
+
+
+DESCRIBE HISTORY WideWorldImportersDW.dimcustomer
+
+
+# In[ ]:
+
+
+SELECT * FROM WideWorldImportersDW.dimcustomer VERSION AS OF 7
+
+
+# In[ ]:
+
+
+VACUUM WideWorldImportersDW.dimcustomer DRY RUN; 
+
+
+# In[ ]:
+
+
+VACUUM WideWorldImportersDW.dimcustomer RETAIN 0 Hours; 
+
+
+# In[ ]:
+
+
+set spark.databricks.delta.retentionDurationCheck.enabled = false;
+
+
+# In[ ]:
+
+
+VACUUM WideWorldImportersDW.dimcustomer RETAIN 0 Hours; 
+
+
+# In[ ]:
+
+
+SELECT * FROM WideWorldImportersDW.dimcustomer
+
+
+# In[ ]:
+
+
+SELECT * FROM WideWorldImportersDW.dimcustomer VERSION AS OF 7
+
+
+# In[ ]:
+
+
+CREATE TABLE WideWorldImportersDW.dimcustomer_COPY SHALLOW CLONE WideWorldImportersDW.dimcustomer
+
+
+# In[ ]:
+
+
+SELECT * FROM WideWorldImportersDW.dimcustomer_COPY
+
